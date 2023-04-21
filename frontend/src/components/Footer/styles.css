@@ -1,0 +1,30 @@
+html, body {
+  height: 100%;
+}
+
+.wrapper {
+  min-height: 100%;
+  /* margin-bottom: -50px; */
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  background-color: #2a2d41;
+  padding: 1.5rem 2rem;
+}
+
+.footer .text {
+  float: left;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.footer .social-icons {
+  float: right;
+}
+
+.footer .social-icons a {
+  margin-left: 10px;
+}

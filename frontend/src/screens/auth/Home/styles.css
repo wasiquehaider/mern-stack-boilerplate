@@ -1,0 +1,82 @@
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+.card-title {
+  margin-top: 10px;
+}
+
+.collapsible-heading {
+    position: relative;
+    cursor: pointer;
+  }
+  
+  .collapsible-heading h4 {
+    margin-bottom: 0;
+  }
+  
+  .text {
+    flex-grow: 1;
+  }
+  .text-skyBlue {
+    color: #1981bb;
+  }
+  
+  .arrow-icon {
+    margin: 0rem 1rem;
+  }
+  
+  .arrow-icon i {
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .collapsed .arrow-icon i {
+    transform: rotate(-90deg);
+  }
+  .underline-heading {
+    border-bottom: 2px solid gray;
+    padding: 1rem 0rem;
+  }
+  
+  .underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 0;
+    background-color: black;
+    transition: width 0.2s ease-in-out;
+    border-bottom: none;
+  }
+  
+  .collapsed .underline {
+    width: 0;
+  }
+  
+  .show .underline {
+    width: 100%;
+    border-bottom: 2px solid black;
+  }
+
+@media screen and (max-width: 576px) {
+  .icon-container {
+    height: 80px;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .icon-container {
+    height: 60px;
+  }
+
+  .card-title {
+    font-size: 12px;
+  }
+}
