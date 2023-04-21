@@ -1,27 +1,29 @@
 import axios from 'axios'
 import { config } from '../utils/customLocalStorage'
 
+const base_url = "http://ec2-3-137-179-43.us-east-2.compute.amazonaws.com:5000"
+
 const dynamicAPI = async (method, url, obj = {}) => {
   try {
     switch (method) {
       case 'get':
         return await axios
-          .get(`http://localhost:5000${url}`, config())
+          .get(`${base_url}${url}`, config())
           .then((res) => res.data)
 
       case 'post':
         return await axios
-          .post(`http://localhost:5000${url}`, obj, config())
+          .post(`${base_url}${url}`, obj, config())
           .then((res) => res.data)
 
       case 'put':
         return await axios
-          .put(`http://localhost:5000${url}`, obj, config())
+          .put(`${base_url}${url}`, obj, config())
           .then((res) => res.data)
 
       case 'delete':
         return await axios
-          .delete(`http://localhost:5000${url}`, config())
+          .delete(`${base_url}${url}`, config())
           .then((res) => res.data)
     }
   } catch (error) {
