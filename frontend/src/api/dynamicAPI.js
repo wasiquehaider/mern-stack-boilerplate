@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { config } from '../utils/customLocalStorage'
 
-const base_url = "http://ec2-3-137-179-43.us-east-2.compute.amazonaws.com:5000"
+const base_url = "http://ec2-52-15-137-187.us-east-2.compute.amazonaws.com:5000"
 
 const dynamicAPI = async (method, url, obj = {}) => {
   try {
