@@ -6,6 +6,7 @@ import Login from './screens/auth/Login'
 import NotFound from './screens/auth/NotFound'
 import ResetPassword from './screens/auth/ResetPassword'
 import Profile from './screens/account/Profile'
+import UserProfile from './screens/account/UserProfile'
 import ClientPermissions from './screens/admin/auth/ClientPermissions'
 import Permissions from './screens/admin/auth/Permissions'
 import Roles from './screens/admin/auth/Roles'
@@ -29,6 +30,7 @@ const App = () => {
           <Route element={<RequireAuth />}>
             <Route path='/' element={<Home />} />
             <Route path='/account/profile' element={<Profile />} />
+            <Route path='/account/userprofile' element={<UserProfile />} />
             <Route
               path='/admin/auth/client-permissions'
               element={<ClientPermissions />}

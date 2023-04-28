@@ -16,6 +16,7 @@ import { Confirm } from './Confirm'
 import Layout from './Layout'
 import FormContainer from './FormContainer'
 import Search from './Search'
+import Header from './Header'
 import Footer from './Footer'
 
 export {
@@ -37,5 +38,6 @@ export {
   Layout,
   FormContainer,
   Search,
+  Header,
   Footer,
 }

@@ -6,44 +6,42 @@ import {
   BsBookmarks,
   BsPeople,
 } from "react-icons/bs";
-import { useMutation } from 'react-query'
-import useAuthHook from '../../../api/auth'
 
-import { FaChevronDown, FaChevronRight,FaSchool } from "react-icons/fa";
+import { FaChevronDown, FaChevronRight, FaSchool } from "react-icons/fa";
 import "./styles.css";
-import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import {Header} from "../../../components";
 
 const options = [
   {
     id: 0,
     name: "View My Account",
     icon: <BsFillPersonFill size={100} />,
-    route:"/account/profile"
+    route: "/account/userprofile",
   },
   {
     id: 1,
     name: "Library Services",
     icon: <FaSchool size={100} />,
-    route:"/account/profile"
+    route: "/account/profile",
   },
   {
     id: 2,
     name: "Request Document",
     icon: <BsFileText size={100} />,
-    route:"/account/profile"
+    route: "/account/profile",
   },
   {
     id: 3,
     name: "View My Academics",
     icon: <BsBookmarks size={100} />,
-    route:"/account/profile"
+    route: "/account/profile",
   },
   {
     id: 4,
     name: "Faculty & Staff Directory",
     icon: <BsPeople size={100} />,
-    route:"/account/profile"
+    route: "/account/profile",
   },
 ];
 
@@ -77,16 +75,8 @@ const newsItems = [
 const Home = () => {
   const [open, setOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { auth } = useAuth()
-   const navigate = useNavigate()
-  const { postLogout } = useAuthHook()
-  const { mutateAsync } = useMutation(postLogout, {
-    onSuccess: () => navigate('/auth/login'),
-  })
+  const navigate = useNavigate();
 
-  const logoutHandler = () => {
-    mutateAsync({})
-  }
   // toggle collapse state
   const handleOptions = () => {
     setOpen(!open);
@@ -96,26 +86,13 @@ const Home = () => {
     setIsCollapsed(!isCollapsed);
   };
 
-  const user = () => {
-    const userInfo = auth?.userInfo
-
-    return userInfo
-  }
   return (
     <>
       <Helmet>
         <title>Home Page</title>
         <meta property="og:title" content="Home Page" key="title" />
       </Helmet>
-      <p className="fs-2 fw-bold p-0 m-0" >{`Welcome ${user() && user().name}!`}</p>
-      <p className="text-secondary">{`Logged in as ${user() && user().name}. Not you?`}  <Link
-              to='/auth/login'
-              className='nav-link d-inline'
-              aria-current='page'
-              onClick={logoutHandler}
-            >
-              Signout
-            </Link></p>
+      <Header />
       <div>
         <div className="collapsible-heading" onClick={handleOptions}>
           <p className="fs-5 fw-bold d-flex align-items-center underline-heading">
@@ -134,7 +111,11 @@ const Home = () => {
             <div className="container-fluid">
               <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
                 {options.map((item) => (
-                  <div className="col" key={item.id} onClick={() => navigate(item.route)}>
+                  <div
+                    className="col"
+                    key={item.id}
+                    onClick={() => navigate(item.route)}
+                  >
                     <div className="card text-center">
                       <div className="card-body">
                         <div className="icon-container">{item.icon}</div>
