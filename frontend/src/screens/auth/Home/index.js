@@ -23,7 +23,7 @@ const options = [
     id: 1,
     name: "Library Services",
     icon: <FaSchool size={100} />,
-    route: "/account/profile",
+    route: "/account/library",
   },
   {
     id: 2,
@@ -35,13 +35,13 @@ const options = [
     id: 3,
     name: "View My Academics",
     icon: <BsBookmarks size={100} />,
-    route: "/account/profile",
+    route: "/account/academics",
   },
   {
     id: 4,
     name: "Faculty & Staff Directory",
     icon: <BsPeople size={100} />,
-    route: "/account/profile",
+    route: "/account/staffdirectory",
   },
 ];
 

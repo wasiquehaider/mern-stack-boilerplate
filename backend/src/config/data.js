@@ -253,6 +253,27 @@ const clientPermissions = [
     description: 'Request Document page',
   },
   {
+    name: 'MyAcademics',
+    path: '/account/academics',
+    menu: 'hidden',
+    auth: true,
+    description: 'My Academics page',
+  },
+  {
+    name: 'StaffDirectory',
+    path: '/account/staffdirectory',
+    menu: 'hidden',
+    auth: true,
+    description: 'Staff Directory page',
+  },
+  {
+    name: 'LibraryServices',
+    path: '/account/library',
+    menu: 'hidden',
+    auth: true,
+    description: 'Library Services page',
+  },
+  {
     name: 'Permissions',
     path: '/admin/auth/permissions',
     menu: 'admin',

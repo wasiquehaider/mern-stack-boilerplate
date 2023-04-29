@@ -89,21 +89,22 @@ const UserProfile = () => {
         </div>
         <p className="text-skyBlue fs-7 fw-bold">Account Summary</p>
         <div className="d-flex flex-row align-items-center mb-4 ">
-  <label htmlFor="termSelect" className="mr-3">Select Term:</label>
-  <div className="form-group">
-    <select
-      className="form-control"
-      id="termSelect"
-      value={selectedTerm}
-      onChange={handleTermSelect}
-    >
-      <option value="Select Term">Select Term</option>
-      <option value="Fall 2021">Fall 2021</option>
-      <option value="Spring 2021">Spring 2021</option>
-      <option value="Summer 2021">Summer 2021</option>
-    </select>
-  </div>
-</div>
+          <label htmlFor="termSelect" className="mr-3">
+            Select Term:
+          </label>
+          <div className="form-group">
+            <select
+              className="form-control"
+              id="termSelect"
+              value={selectedTerm}
+              onChange={handleTermSelect}
+            >
+              <option value="Select Term">Select Term</option>
+              <option value="Spring 2023">Spring 2023</option>
+              <option value="Fall 2021">Fall 2021</option>
+            </select>
+          </div>
+        </div>
         <div className="container">
           <div className="col-6">
             <table className="table table-striped table-bordered table-hover">

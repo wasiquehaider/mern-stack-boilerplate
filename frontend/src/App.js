@@ -15,6 +15,9 @@ import UserRoles from './screens/admin/auth/UserRoles'
 import UserProfiles from './screens/admin/auth/UserProfiles'
 import Users from './screens/admin/auth/Users'
 import { Layout } from './components'
+import StaffDirectory from './screens/account/StaffDirectory'
+import MyAcademics from './screens/account/MyAcademics'
+import LibraryServices from './screens/account/LibraryServices'
 
 const App = () => {
   return (
@@ -33,6 +36,9 @@ const App = () => {
             <Route path='/account/profile' element={<UserProfile />} />
             {/* <Route path='/account/userprofile' element={<UserProfile />} /> */}
             <Route path='/account/requestdocument' element={<RequestDocument />} />
+            <Route path='/account/academics' element={<MyAcademics />} />
+            <Route path='/account/staffdirectory' element={<StaffDirectory />} />
+            <Route path='/account/library' element={<LibraryServices />} />
             <Route
               path='/admin/auth/client-permissions'
               element={<ClientPermissions />}
