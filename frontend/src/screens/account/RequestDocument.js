@@ -84,8 +84,8 @@ const RequestDocument = () => {
                       onChange={handleTranscriptTypeChange}
                     >
                       <option value="">Select Transcript Type</option>
-                      <option value="official">Official</option>
-                      <option value="unofficial">Unofficial</option>
+                      <option value="electronic">Electronic</option>
+                      <option value="mail">Mail</option>
                     </select>
                   </div>
                 </div>
