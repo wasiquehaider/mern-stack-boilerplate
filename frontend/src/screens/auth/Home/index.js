@@ -17,7 +17,7 @@ const options = [
     id: 0,
     name: "View My Account",
     icon: <BsFillPersonFill size={100} />,
-    route: "/account/userprofile",
+    route: "/account/profile",
   },
   {
     id: 1,
@@ -29,7 +29,7 @@ const options = [
     id: 2,
     name: "Request Document",
     icon: <BsFileText size={100} />,
-    route: "/account/profile",
+    route: "/account/requestdocument",
   },
   {
     id: 3,

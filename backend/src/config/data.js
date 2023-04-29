@@ -30,6 +30,13 @@ const roles = [
 
 const users = [
   {
+    name: "Wasique Haider",
+    email: "wasique@info.com",
+    password: "123456",
+    confirmed: true,
+    blocked: false,
+  },
+  {
     name: "John Smith",
     email: "johnsmith@tgu.com",
     password: "1998TGU89170",
@@ -67,6 +74,27 @@ const users = [
 ];
 
 const studentProfiles = [
+  {
+    "stdId": "TGU89170",
+    "firstName": "Wasique",
+    "lastName": "Haider",
+    "gender": "Male",
+    "DOB": "11/17/1996",
+    "email": "wasique@info.com",
+    "phone": "(123) 456-7890",
+    "mailingAddress": "1115 E 58th St, Chicago, IL 60637",
+    "programOfStudy": "Master of Science in Data Science",
+    "studentStatus": "Active",
+    "residence": "Residential",
+    "advisor": "Dr. Rachel Nguyen",
+    "permanentAddress": "1565 Oak Street, Wichita, KS 67211",
+    "password": "1998TGU89170",
+    "currentGPA": 3.8,
+    "academicLevel": "Graduate",
+    "concentration": "Machine Learning",
+    "college": "School of Data Science and Analytics",
+    "graduationDate": "05/18/2024"
+  },
   {
     "stdId": "TGU89170",
     "firstName": "John",
@@ -218,11 +246,11 @@ const clientPermissions = [
     description: 'Profile page',
   },
   {
-    name: 'UserProfile',
-    path: '/account/userprofile',
-    menu: 'userprofile',
+    name: 'RequestDocument',
+    path: '/account/requestdocument',
+    menu: 'hidden',
     auth: true,
-    description: 'User Profile page',
+    description: 'Request Document page',
   },
   {
     name: 'Permissions',
