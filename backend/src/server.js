@@ -1,5 +1,6 @@
 import path from 'path'
 import express from 'express'
+import bodyParser  from 'body-parser'
 import 'dotenv/config'
 import 'colors'
 import fileUpload from 'express-fileupload'
@@ -15,6 +16,8 @@ db()
 const app = express()
 app.use(cors())
 app.use(fileUpload())
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))

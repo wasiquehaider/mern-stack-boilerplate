@@ -38,6 +38,7 @@ import { login } from '../controllers/auth/login.js'
 import { postForgotPassword } from '../controllers/auth/forgot-password.js'
 import { postResetPassword } from '../controllers/auth/reset-password.js'
 import { seed } from '../controllers/auth/seed.js'
+import { getStudentPayments } from '../controllers/auth/student-payments.js'
 
 const router = express.Router()
 
@@ -55,6 +56,9 @@ router.route('/api/auth/seed').get(seed)
 
 // user profiles
 router.route('/api/auth/user-profiles').get(isAuth, getUserProfiles)
+
+// get student payments
+router.route('/api/auth/payments').post(isAuth, getStudentPayments)
 
 // permissions
 router

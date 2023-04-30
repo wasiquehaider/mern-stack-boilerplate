@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Header, Message } from "../../components";
 import { Helmet } from "react-helmet";
 import useProfilesHook from "../../api/profiles";
+import usePaymentsHook from "../../api/payments";
 
 const UserProfile = () => {
   const { getProfile } = useProfilesHook({
@@ -21,7 +22,26 @@ const UserProfile = () => {
   const [studentStatus, setStudentStatus] = useState(false);
   const [residence, setResidence] = useState("");
   const [advisor, setAdvisor] = useState("");
+  const [selectedTerm, setSelectedTerm] = useState("Spring 2023");
   const { data, isLoading, isError, error } = getProfile;
+
+  const { getPayments } = usePaymentsHook({
+    stdId: data?.stdId,
+    term: selectedTerm,
+  })
+
+  const { data: dataPayments } = getPayments
+
+  console.log({dataPayments})
+
+  const tableData = dataPayments?.data?.map(item => ({
+    detailCode:item.detailCode,
+    description:item.description,
+    charge:item?.charge ?? 0,
+    payment:item?.payment ?? 0,
+    balance:item?.balance ?? 0,
+    
+  }))
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -44,7 +64,7 @@ const UserProfile = () => {
     // setValue("phone", !isLoading ? data && data.phone : "");
     // setValue("bio", !isLoading ? data && data.bio : "");
   }, [isLoading, data]);
-  const [selectedTerm, setSelectedTerm] = useState("Select Term");
+  
 
   function handleTermSelect(event) {
     setSelectedTerm(event.target.value);
@@ -99,9 +119,8 @@ const UserProfile = () => {
               value={selectedTerm}
               onChange={handleTermSelect}
             >
-              <option value="Select Term">Select Term</option>
               <option value="Spring 2023">Spring 2023</option>
-              <option value="Fall 2021">Fall 2021</option>
+              <option value="Fall 2023">Fall 2021</option>
             </select>
           </div>
         </div>
@@ -118,41 +137,19 @@ const UserProfile = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>DC001</td>
-                  <td>Description 1</td>
-                  <td>$100.00</td>
-                  <td>$50.00</td>
-                  <td>$50.00</td>
+              {
+                tableData?.map((row,i) => (
+                  <tr key={i}>
+                  <td>{row.detailCode}</td>
+                  <td>{row.description}</td>
+                  <td>${row.charge}</td>
+                  <td>${row.payment}</td>
+                  <td>${row.balance}</td>
                 </tr>
-                <tr>
-                  <td>DC002</td>
-                  <td>Description 2</td>
-                  <td>$200.00</td>
-                  <td>$100.00</td>
-                  <td>$100.00</td>
-                </tr>
-                <tr>
-                  <td>DC003</td>
-                  <td>Description 3</td>
-                  <td>$300.00</td>
-                  <td>$200.00</td>
-                  <td>$100.00</td>
-                </tr>
-                <tr>
-                  <td>DC004</td>
-                  <td>Description 4</td>
-                  <td>$400.00</td>
-                  <td>$300.00</td>
-                  <td>$100.00</td>
-                </tr>
-                <tr>
-                  <td>DC005</td>
-                  <td>Description 5</td>
-                  <td>$500.00</td>
-                  <td>$400.00</td>
-                  <td>$100.00</td>
-                </tr>
+                ))
+              }
+                
+                
               </tbody>
             </table>
           </div>
