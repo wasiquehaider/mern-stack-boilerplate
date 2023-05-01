@@ -382,6 +382,13 @@ const permissions = [
     method: 'GET',
   },
   {
+    description: 'Get All Books',
+    route: '/api/auth/books',
+    auth: true,
+    name: 'Books and Journals',
+    method: 'GET',
+  },
+  {
     description: 'Get All User Profiles',
     route: '/api/auth/user-profiles',
     auth: true,

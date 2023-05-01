@@ -1,17 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
 import { Helmet } from "react-helmet";
-import { Header } from "../../components";
+import { Header, Message, Spinner } from "../../components";
 import { FaChevronDown } from "react-icons/fa";
 import "./styles.css";
+import useBooksJournalsHook from "../../api/books";
 
 const LibraryServices = () => {
+  const { getBooks } = useBooksJournalsHook({});
+  const { data, isLoading, isError, error } = getBooks;
+  const [booksData, setBooksData] = useState([]);
+  const [filteredBooksData, setFilteredBooksData] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [bookName, setBookName] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [success, setSuccess] = useState(false)
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setBooksData(data.data);
+    }
+  }, [isLoading, data]);
 
   const handleSelectChange = (event) => {
     const selected = Array.from(
@@ -26,10 +37,35 @@ const LibraryServices = () => {
     setBookName(event.target.value);
   };
 
+  const onSearch = () => {
+    const filteredBooks = booksData.filter(book => {
+      
+      if (selectedOptions.length > 0 && !selectedOptions.includes(book.bookType)) {
+        return false;
+      }
+  
+      
+      if (bookName !== '' && !book.bookDetails.toLowerCase().includes(bookName.toLowerCase())) {
+        return false;
+      }
+  
+      
+      return true;
+    });
+    
+    setFilteredBooksData(filteredBooks);
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSuccess(true)
+    setSuccess(true);
   };
+
+  
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -37,7 +73,7 @@ const LibraryServices = () => {
         <title>Library Services</title>
         <meta property="og:title" content="Library Services" key="title" />
       </Helmet>
-
+      {isError && <Message variant="danger">{error}</Message>}
       <Header heading="Library Services" showCollapse={true}>
         <div className="container">
           <div className="row justify-content-md-center">
@@ -81,6 +117,7 @@ const LibraryServices = () => {
               />
               <div className="form-group text-center mt-3">
                 <button
+                  onClick={onSearch}
                   type="submit"
                   className="btn btn-primary bg-skyBlue mb-5"
                 >
@@ -95,18 +132,13 @@ const LibraryServices = () => {
         <div className="container results">
           <div className="row justify-content-md-center">
             <div className="col-md-8 border-skyblue p-3">
-              <div className="bookItem">
-                <p className="text-skyBlue fs-7 fw-bold">
-                  Multi-view city-based approach for code-smell evolution
-                  visualisation
-                </p>
-                <p className="fs-7 fw-bold s">
-                  Katbi, Abdulkarim ; Hammad, Mustafa ; Elmedany, Wael
-                </p>
-                <p className="fs-7 fw-bold">
-                  IET software, 2020, Vol.14 (5), p.506-516
-                </p>
-              </div>
+              {filteredBooksData?.map((book, i) => (
+                <div key={i} className="bookItem">
+                  <p className="text-skyBlue fs-7 fw-bold">{book.bookType}</p>
+                  <p className="fs-7 fw-bold s">{book.bookDetails}</p>
+                  <p className="fs-7 fw-bold">{book.subject}</p>
+                </div>
+              ))}
             </div>
             <div className="col-md-4 border-skyblue p-3">
               <p className="text-skyBlue fs-7 fw-bold pb-4">
@@ -144,17 +176,21 @@ const LibraryServices = () => {
               </div>
               <div className="form-group text-center mt-3">
                 <button
-                onClick={handleSubmit}
+                  onClick={handleSubmit}
                   type="submit"
                   className="btn btn-primary bg-skyBlue mb-5"
                 >
                   Rent
                 </button>
               </div>
-              {success && <div className="text-center">
-              <p className="text-success font-italic">Success!!</p>
-              <p className="text-success font-italic">Please collect your book from the library</p>
-              </div>}
+              {success && (
+                <div className="text-center">
+                  <p className="text-success font-italic">Success!!</p>
+                  <p className="text-success font-italic">
+                    Please collect your book from the library
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
