@@ -1,108 +1,143 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
-import { Header } from "../../components";
+import { Header, Message, Spinner } from "../../components";
 import "./styles.css";
+import useProfilesHook from "../../api/profiles";
+import useAcademicsHook from "../../api/academics";
 
 const MyAcademics = () => {
-  const [location, setLocation] = useState("");
-  const [department, setDepartment] = useState("");
-  const [name, setName] = useState("");
+  const [stdId, setStdId] = useState("");
+  const [academicLevel, setAcademicLevel] = useState("");
+  const [college, setCollege] = useState("");
+  const [programOfStudy, setProgramOfStudy] = useState("");
+  const [graduationDate, setGraduationDate] = useState("");
+  const [concentration, setConcentration] = useState("");
+  const [advisor, setAdvisor] = useState("");
+  const [currentGPA, setCurrentGPA] = useState("");
+  const [academicsTable, setAcademicsTable] = useState([]);
+  const { getProfile } = useProfilesHook({
+    page: 1,
+    q: "",
+    limit: 25,
+  });
+  const { getAcademics } = useAcademicsHook({
+    stdId: stdId,
+  });
+  const { data, isLoading, isError, error } = getProfile;
+  const {
+    data: academicsData,
+    isLoading: academicsIsLoading,
+    isError: academicsIsError,
+    error: academicsError,
+  } = getAcademics;
 
-  const handleLocationChange = (event) => {
-    setLocation(event.target.value);
-  };
-
-  const handleDepartmentChange = (event) => {
-    setDepartment(event.target.value);
-  };
-
-  const handleName = (event) => {
-    setName(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log("Transcript Level:", location);
-    console.log("Transcript Type:", department);
-    console.log("Signature:", name);
-  };
-
+  useEffect(() => {
+    if (!isLoading && data) {
+      setStdId(data.stdId);
+      setAcademicLevel(data.academicLevel);
+      setCollege(data.college);
+      setProgramOfStudy(data.programOfStudy);
+      setGraduationDate(data.graduationDate);
+      setConcentration(data.concentration);
+      setAdvisor(data.advisor);
+      setCurrentGPA(data.currentGPA);
+    }
+  }, [isLoading, data]);
+  useEffect(() => {
+    if (!academicsIsLoading && academicsData) {
+      console.log({academicsData})
+      setAcademicsTable(academicsData.data);
+    }
+  }, [academicsIsLoading, academicsData]);
   return (
     <>
       <Helmet>
         <title>My Academics</title>
-        <meta
-          property="og:title"
-          content="My Academics"
-          key="title"
-        />
+        <meta property="og:title" content="My Academics" key="title" />
       </Helmet>
-
+      {isError && <Message variant="danger">{error}</Message>}
+      {academicsIsError && <Message variant="danger">{academicsError}</Message>}
       <Header heading="My Academics" showCollapse={true}>
-        <div className="container">
-          <div className="row justify-content-md-center">
-            <div className="col-md-6 text-center">
-              <form onSubmit={handleSubmit}>
-                <div className="form-group row mb-3">
-                  <label
-                    htmlFor="transcript-level"
-                    className="col-sm-3 col-form-label"
-                  >
-                    Transcript Level:
-                  </label>
-                  <div className="col-sm-9">
-                    <select
-                      className="form-control select-bottom-border"
-                      id="transcript-level"
-                      value={location}
-                      onChange={handleLocationChange}
-                    >
-                      <option value="">Select Transcript Level</option>
-                      <option value="high-school">High School</option>
-                      <option value="undergraduate">Undergraduate</option>
-                      <option value="graduate">Graduate</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group row mb-3">
-                  <label
-                    htmlFor="transcript-type"
-                    className="col-sm-3 col-form-label"
-                  >
-                    Transcript Type:
-                  </label>
-                  <div className="col-sm-9">
-                    <select
-                      className="form-control select-bottom-border"
-                      id="transcript-type"
-                      value={department}
-                      onChange={handleDepartmentChange}
-                    >
-                      <option value="">Select Transcript Type</option>
-                      <option value="electronic">Electronic</option>
-                      <option value="mail">Mail</option>
-                    </select>
-                  </div>
-                </div>
-                <div className="form-group row mb-3">
-                  <label htmlFor="name" className="col-sm-3 col-form-label">
-                    Signature:
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="text"
-                      className="form-control select-bottom-border"
-                      id="name"
-                      placeholder="Type your full Name"
-                      value={name}
-                      onChange={handleName}
-                    />
-                  </div>
-                </div>
-              </form>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="container">
+            <div className="row">
+              <div className="col-md-4">
+                <p>
+                  <b>Level:</b> {academicLevel}
+                </p>
+                <p>
+                  <b>College:</b> {college}
+                </p>
+              </div>
+              <div className="col-md-4">
+                <p>
+                  <b>Program:</b> {programOfStudy}
+                </p>
+                <p>
+                  <b>Graduation Date:</b> {graduationDate}
+                </p>
+              </div>
+              <div className="col-md-4">
+                <p>
+                  <b>Concentration:</b> {concentration}
+                </p>
+                <p>
+                  <b>Advisor:</b> {advisor}
+                </p>
+              </div>
             </div>
+            <div className="separator"></div>
+            <div className="row mt-3">
+              <div className="col-md-4">
+                <p>
+                  <b>Credits Required for Graduation:</b> 30
+                </p>
+              </div>
+              <div className="col-md-4">
+                <p>
+                  <b>Credits Earned:</b> 27
+                </p>
+              </div>
+              <div className="col-md-4">
+                <p>
+                  <b>Current GPA:</b> {currentGPA}
+                </p>
+              </div>
+            </div>
+            <div className="separator mb-5 "></div>
+            <p className="text-skyBlue fs-7 fw-bold">Account Summary</p>
+           { academicsIsLoading ? (
+          <Spinner />
+        ) : <div className="container">
+              <div className="col-6">
+                <table className="table table-striped table-bordered table-hover">
+                  <thead className="bg-light">
+                    <tr>
+                      <th>Course Code</th>
+                      <th>Description</th>
+                      <th>Credits</th>
+                      <th>Grade</th>
+                      <th>Term</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {academicsTable?.map((item,i) => (
+                      <tr key={i}>
+                      <td>{item.courseCode}</td>
+                      <td>{item.courseDescription}</td>
+                      <td>{item.credits}</td>
+                      <td>{item.grade}</td>
+                      <td>{item.term}</td>
+                    </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>}
           </div>
-        </div>
+        )}
       </Header>
     </>
   );

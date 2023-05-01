@@ -368,6 +368,13 @@ const permissions = [
     method: 'POST',
   },
   {
+    description: 'Get All Students Academics',
+    route: '/api/auth/academics',
+    auth: true,
+    name: 'Student Academics',
+    method: 'POST',
+  },
+  {
     description: 'Get All User Profiles',
     route: '/api/auth/user-profiles',
     auth: true,

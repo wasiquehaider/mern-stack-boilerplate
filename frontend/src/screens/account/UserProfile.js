@@ -1,6 +1,6 @@
 // import { useEffect, useState } from 'react'
 import { useEffect, useState } from "react";
-import { Header, Message } from "../../components";
+import { Header, Message, Spinner } from "../../components";
 import { Helmet } from "react-helmet";
 import useProfilesHook from "../../api/profiles";
 import usePaymentsHook from "../../api/payments";
@@ -22,26 +22,21 @@ const UserProfile = () => {
   const [studentStatus, setStudentStatus] = useState(false);
   const [residence, setResidence] = useState("");
   const [advisor, setAdvisor] = useState("");
+  const [paymentsTable, setPaymentsTable] = useState([]);
   const [selectedTerm, setSelectedTerm] = useState("Spring 2023");
   const { data, isLoading, isError, error } = getProfile;
 
   const { getPayments } = usePaymentsHook({
     stdId: data?.stdId,
     term: selectedTerm,
-  })
+  });
 
-  const { data: dataPayments } = getPayments
-
-  console.log({dataPayments})
-
-  const tableData = dataPayments?.data?.map(item => ({
-    detailCode:item.detailCode,
-    description:item.description,
-    charge:item?.charge ?? 0,
-    payment:item?.payment ?? 0,
-    balance:item?.balance ?? 0,
-    
-  }))
+  const {
+    data: paymentsData,
+    isLoading: paymentsIsLoading,
+    isError: paymentsIsError,
+    error: paymentError,
+  } = getPayments;
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -58,13 +53,20 @@ const UserProfile = () => {
       setResidence(data.residence);
       setAdvisor(data.advisor);
     }
-
-    // setValue("name", !isLoading ? data && data.name : "");
-    // setValue("address", !isLoading ? data && data.address : "");
-    // setValue("phone", !isLoading ? data && data.phone : "");
-    // setValue("bio", !isLoading ? data && data.bio : "");
   }, [isLoading, data]);
-  
+
+  useEffect(() => {
+    if (!paymentsIsLoading && paymentsData) {
+      const tableData = paymentsData?.data?.map((item) => ({
+        detailCode: item.detailCode,
+        description: item.description,
+        charge: item?.charge ?? 0,
+        payment: item?.payment ?? 0,
+        balance: item?.balance ?? 0,
+      }));
+      setPaymentsTable(tableData);
+    }
+  }, [paymentsIsLoading, paymentsData]);
 
   function handleTermSelect(event) {
     setSelectedTerm(event.target.value);
@@ -76,6 +78,7 @@ const UserProfile = () => {
         <meta property="og:title" content="User Profile" key="title" />
       </Helmet>
       {isError && <Message variant="danger">{error}</Message>}
+      {paymentsIsError && <Message variant="danger">{paymentError}</Message>}
       <Header heading="My Account" showCollapse={true}>
         <div className="container">
           <div className="row">
@@ -124,36 +127,36 @@ const UserProfile = () => {
             </select>
           </div>
         </div>
-        <div className="container">
-          <div className="col-6">
-            <table className="table table-striped table-bordered table-hover">
-              <thead className="bg-light">
-                <tr>
-                  <th>Detail Code</th>
-                  <th>Description</th>
-                  <th>Charge</th>
-                  <th>Payment</th>
-                  <th>Balance</th>
-                </tr>
-              </thead>
-              <tbody>
-              {
-                tableData?.map((row,i) => (
-                  <tr key={i}>
-                  <td>{row.detailCode}</td>
-                  <td>{row.description}</td>
-                  <td>${row.charge}</td>
-                  <td>${row.payment}</td>
-                  <td>${row.balance}</td>
-                </tr>
-                ))
-              }
-                
-                
-              </tbody>
-            </table>
+        {paymentsIsLoading ? (
+          <Spinner />
+        ) : (
+          <div className="container">
+            <div className="col-6">
+              <table className="table table-striped table-bordered table-hover">
+                <thead className="bg-light">
+                  <tr>
+                    <th>Detail Code</th>
+                    <th>Description</th>
+                    <th>Charge</th>
+                    <th>Payment</th>
+                    <th>Balance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paymentsTable?.map((row, i) => (
+                    <tr key={i}>
+                      <td>{row.detailCode}</td>
+                      <td>{row.description}</td>
+                      <td>${row.charge}</td>
+                      <td>${row.payment}</td>
+                      <td>${row.balance}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
       </Header>
     </>
   );
