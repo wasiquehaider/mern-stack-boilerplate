@@ -375,6 +375,13 @@ const permissions = [
     method: 'POST',
   },
   {
+    description: 'Get All Faculties',
+    route: '/api/auth/faculties',
+    auth: true,
+    name: 'Faculties',
+    method: 'GET',
+  },
+  {
     description: 'Get All User Profiles',
     route: '/api/auth/user-profiles',
     auth: true,

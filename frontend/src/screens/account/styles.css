@@ -5,6 +5,9 @@
   .bg-skyBlue {
     background-color: #1981bb;
   }
+  .border-skyblue {
+    border: 1px solid #1981bb
+  }
 
   .select-bottom-border {
     border: none;
@@ -16,4 +19,13 @@
     height: 0.1rem;
     background-color: #ccc;
     padding: 1px;
+  }
+
+  .results p {
+    margin: 0;
+    padding: 0;
+  }
+
+  .bookItem {
+    margin-bottom: 1rem;
   }

@@ -1,12 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Header } from "../../components";
+import { Header, Message, Spinner } from "../../components";
 import "./styles.css";
+import useFacultiesHook from "../../api/faculties";
 
 const StaffDirectory = () => {
+  const { getFaculties } = useFacultiesHook({});
+  const { data, isLoading, isError, error } = getFaculties;
+  const [faculties, setFaculties] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [departments, setDepartments] = useState([]);
   const [location, setLocation] = useState("");
   const [department, setDepartment] = useState("");
   const [name, setName] = useState("");
+  const [results,setResults] = useState([])
+  console.log(results)
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      const locationSet = new Set(data?.data?.map(({ officeLocation }) => officeLocation));
+      const locationsData = Array.from(locationSet);
+      const departmentSet = new Set(data?.data?.map(({ researchArea }) => researchArea));
+      const departmentsData = Array.from(departmentSet);
+      setLocations(locationsData);
+      setLocation(locationsData[0]);
+      setDepartments(departmentsData);
+      setDepartment(departmentsData[0])
+      setFaculties( data);
+    }
+  }, [isLoading, data]);
 
   const handleLocationChange = (event) => {
     setLocation(event.target.value);
@@ -20,12 +42,16 @@ const StaffDirectory = () => {
     setName(event.target.value);
   };
 
+
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log("Transcript Level:", location);
-    console.log("Transcript Type:", department);
-    console.log("Signature:", name);
+    const filtered = faculties?.data?.filter(faculty => faculty.officeLocation === location && faculty.researchArea === department && faculty.facultyName.toLowerCase().includes(name) )
+    console.log(filtered)
+    setResults(filtered)
   };
+
+  console.log(faculties)
 
   return (
     <>
@@ -37,72 +63,90 @@ const StaffDirectory = () => {
           key="title"
         />
       </Helmet>
-
+      {isError && <Message variant="danger">{error}</Message>}
       <Header heading="Faculty & Staff Directory" showCollapse={true}>
-        <div className="container">
-          <div className="row justify-content-md-center">
-            <div className="col-md-6 text-center">
-              <form onSubmit={handleSubmit}>
-                <div className="form-group row mb-3">
-                  <label
-                    htmlFor="transcript-level"
-                    className="col-sm-3 col-form-label"
-                  >
-                    Transcript Level:
-                  </label>
-                  <div className="col-sm-9">
-                    <select
-                      className="form-control select-bottom-border"
-                      id="transcript-level"
-                      value={location}
-                      onChange={handleLocationChange}
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <div className="container">
+            <div className="row justify-content-md-center">
+              <div className="col-md-6 text-center">
+                <form >
+                  <div className="form-group row mb-3">
+                    <label
+                      htmlFor="transcript-level"
+                      className="col-sm-3 col-form-label"
                     >
-                      <option value="">Select Transcript Level</option>
-                      <option value="high-school">High School</option>
-                      <option value="undergraduate">Undergraduate</option>
-                      <option value="graduate">Graduate</option>
-                    </select>
+                      Location:
+                    </label>
+                    <div className="col-sm-9">
+                      <select
+                        className="form-control select-bottom-border"
+                        id="transcript-level"
+                        value={location}
+                        onChange={handleLocationChange}
+                      >
+                        {locations?.map((location,i) => (
+                          <option key={i} value={location}>{location}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div className="form-group row mb-3">
-                  <label
-                    htmlFor="transcript-type"
-                    className="col-sm-3 col-form-label"
-                  >
-                    Transcript Type:
-                  </label>
-                  <div className="col-sm-9">
-                    <select
-                      className="form-control select-bottom-border"
-                      id="transcript-type"
-                      value={department}
-                      onChange={handleDepartmentChange}
+                  <div className="form-group row mb-3">
+                    <label
+                      htmlFor="transcript-type"
+                      className="col-sm-3 col-form-label"
                     >
-                      <option value="">Select Transcript Type</option>
-                      <option value="electronic">Electronic</option>
-                      <option value="mail">Mail</option>
-                    </select>
+                      Department:
+                    </label>
+                    <div className="col-sm-9">
+                      <select
+                        className="form-control select-bottom-border"
+                        id="transcript-type"
+                        value={department}
+                        onChange={handleDepartmentChange}
+                      >
+                        {departments?.map((department,i) => (
+                          <option key={i} value={department}>{department}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div className="form-group row mb-3">
-                  <label htmlFor="name" className="col-sm-3 col-form-label">
-                    Signature:
-                  </label>
-                  <div className="col-sm-9">
-                    <input
-                      type="text"
-                      className="form-control select-bottom-border"
-                      id="name"
-                      placeholder="Type your full Name"
-                      value={name}
-                      onChange={handleName}
-                    />
+                  <div className="form-group row mb-3">
+                    <label htmlFor="name" className="col-sm-3 col-form-label">
+                      Name:
+                    </label>
+                    <div className="col-sm-9">
+                      <input
+                        type="text"
+                        className="form-control select-bottom-border"
+                        id="name"
+                        placeholder="Type your full Name"
+                        value={name}
+                        onChange={handleName}
+                      />
+                    </div>
                   </div>
-                </div>
-              </form>
+                </form>
+              </div>
             </div>
+            <div className="form-group text-center">
+                  <button onClick={handleSubmit} type="submit" className="btn btn-primary bg-skyBlue">
+                    Search
+                  </button>
+                </div>
           </div>
+        )}
+      </Header>
+      <Header heading="Results" showCollapse={true} showHeading={false}>
+      <div>{results.map((result,i) => (
+        <div key={i}>
+        <p className="text-skyBlue fs-7 fw-bold">{result.facultyName}</p>
+        <p className="fs-7">{result.Designation}</p>
+        <p className="fs-7">{result.phone}</p>
+        <p className="fs-7">{result.email}</p>
         </div>
+      ))}</div>
       </Header>
     </>
   );

@@ -5,7 +5,7 @@ import { useMutation } from "react-query";
 import useAuth from "../../hooks/useAuth";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
-const Home = ({ heading, showCollapse = false, children }) => {
+const Home = ({ heading, showCollapse = false, showHeading=true, children }) => {
   const [open, setOpen] = useState(false);
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Home = ({ heading, showCollapse = false, children }) => {
 
   return (
     <div>
-      <p className="fs-2 fw-bold p-0 m-0">{`Welcome ${
+      {showHeading && <><p className="fs-2 fw-bold p-0 m-0">{`Welcome ${
         user() && user().name
       }!`}</p>
       <p className="text-secondary">
@@ -43,7 +43,7 @@ const Home = ({ heading, showCollapse = false, children }) => {
         >
           Signout
         </Link>
-      </p>
+      </p></>}
       {showCollapse && (
         <div>
           <div>
