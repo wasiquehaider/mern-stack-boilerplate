@@ -38,21 +38,24 @@ const LibraryServices = () => {
   };
 
   const onSearch = () => {
-    const filteredBooks = booksData.filter(book => {
-      
-      if (selectedOptions.length > 0 && !selectedOptions.includes(book.bookType)) {
+    const filteredBooks = booksData.filter((book) => {
+      if (
+        selectedOptions.length > 0 &&
+        !selectedOptions.includes(book.bookType)
+      ) {
         return false;
       }
-  
-      
-      if (bookName !== '' && !book.bookDetails.toLowerCase().includes(bookName.toLowerCase())) {
+
+      if (
+        bookName !== "" &&
+        !book.bookDetails.toLowerCase().includes(bookName.toLowerCase())
+      ) {
         return false;
       }
-  
-      
+
       return true;
     });
-    
+
     setFilteredBooksData(filteredBooks);
   };
 
@@ -60,8 +63,6 @@ const LibraryServices = () => {
     event.preventDefault();
     setSuccess(true);
   };
-
-  
 
   if (isLoading) {
     return <Spinner />;
@@ -95,12 +96,8 @@ const LibraryServices = () => {
                       multiple
                       onChange={handleSelectChange}
                     >
-                      <option value="Everything">Everything</option>
                       <option value="Books">Books</option>
                       <option value="Journals">Journals</option>
-                      <option value="UniversityCatalog">
-                        University Catalog
-                      </option>
                     </select>
                   </div>
                 </div>
@@ -140,39 +137,45 @@ const LibraryServices = () => {
                 </div>
               ))}
             </div>
-            <div className="col-md-4 border-skyblue p-3">
+            <div className="col-md-4 col-sm-6 col-xs-12 border-skyblue p-3">
               <p className="text-skyBlue fs-7 fw-bold pb-4">
                 Rent Selected Item
               </p>
               <div className="d-flex flex-direction">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="Start Date"
-                  dateFormat="MM-dd-yyyy"
-                  isClearable
-                  showYearDropdown
-                  scrollableYearDropdown
-                  yearDropdownItemNumber={15}
-                  todayButton="Today"
-                />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="End Date"
-                  dateFormat="MM-dd-yyyy"
-                  isClearable
-                  showYearDropdown
-                  scrollableYearDropdown
-                  yearDropdownItemNumber={15}
-                  todayButton="Today"
-                />
+                <div className="w-50 pr-1">
+                  <DatePicker
+                    className="form-control"
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="Start Date"
+                    dateFormat="MM-dd-yyyy"
+                    isClearable
+                    showYearDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={15}
+                    todayButton="Today"
+                  />
+                </div>
+                <div className="w-50 pl-1">
+                  <DatePicker
+                    className="form-control"
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="End Date"
+                    dateFormat="MM-dd-yyyy"
+                    isClearable
+                    showYearDropdown
+                    scrollableYearDropdown
+                    yearDropdownItemNumber={15}
+                    todayButton="Today"
+                  />
+                </div>
               </div>
               <div className="form-group text-center mt-3">
                 <button
