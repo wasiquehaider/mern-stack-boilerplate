@@ -75,7 +75,7 @@ const LibraryServices = () => {
         <meta property="og:title" content="Library Services" key="title" />
       </Helmet>
       {isError && <Message variant="danger">{error}</Message>}
-      <Header heading="Library Services" showCollapse={true}>
+      <Header heading="Library Services" showCollapse={true} rightText="Note: All e-books and hard copies available at The Great University are free for enrolled students">
         <div className="container">
           <div className="row justify-content-md-center">
             <div className="col-md-4">
@@ -108,7 +108,7 @@ const LibraryServices = () => {
                 type="text"
                 className="form-control "
                 id="name"
-                placeholder="Type your full Name"
+                placeholder="Enter your search word"
                 value={bookName}
                 onChange={handleBookNameChange}
               />

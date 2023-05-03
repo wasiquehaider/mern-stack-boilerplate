@@ -5,7 +5,7 @@ import { useMutation } from "react-query";
 import useAuth from "../../hooks/useAuth";
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 
-const Home = ({ heading, showCollapse = false, showHeading=true, children }) => {
+const Home = ({ heading, showCollapse = false, showHeading=true, rightText = "", children }) => {
   const [open, setOpen] = useState(false);
   const { auth } = useAuth();
   const navigate = useNavigate();
@@ -58,6 +58,7 @@ const Home = ({ heading, showCollapse = false, showHeading=true, children }) => 
                     )}
                   </div>
                   <span className="text">{heading}</span>
+                  {rightText && <span className="small fw-normal" style={{color: "#b49639"}}>{rightText}</span>}
                 </p>
               </div>
               <div className={open ? "collapse" : "collapse show p-4"}>
