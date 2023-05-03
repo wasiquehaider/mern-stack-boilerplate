@@ -6,7 +6,7 @@ import useProfilesHook from "../../api/profiles";
 import usePaymentsHook from "../../api/payments";
 
 const UserProfile = () => {
-  const { getProfile } = useProfilesHook({
+  const { getProfile, postProfile } = useProfilesHook({
     page: 1,
     q: "",
     limit: 25,
@@ -24,6 +24,10 @@ const UserProfile = () => {
   const [advisor, setAdvisor] = useState("");
   const [paymentsTable, setPaymentsTable] = useState([]);
   const [selectedTerm, setSelectedTerm] = useState("Spring 2023");
+  const [showModal, setShowModal] = useState(false);
+  const [editMailingAddress, setEditMailingAddress] = useState("");
+  const [editPhoneNumber, setEditPhoneNumber] = useState("");
+
   const { data, isLoading, isError, error } = getProfile;
 
   const { getPayments } = usePaymentsHook({
@@ -37,6 +41,27 @@ const UserProfile = () => {
     isError: paymentsIsError,
     error: paymentError,
   } = getPayments;
+
+  const {
+    isSuccess,
+    isLoading: isLoadingPost,
+    isError: isErrorPost,
+    error: errorPost,
+    mutateAsync,
+  } = postProfile
+
+  const handleShowModal = () => {
+    setEditMailingAddress(mailingAddress)
+    setEditPhoneNumber(phone)
+    setShowModal(true)
+  };
+
+  const submitHandler = () => {
+    mutateAsync({
+      mailingAddress: editMailingAddress,
+      phone: editPhoneNumber,
+    })
+  }
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -71,14 +96,22 @@ const UserProfile = () => {
   function handleTermSelect(event) {
     setSelectedTerm(event.target.value);
   }
+
+  useEffect(()=>{
+    setShowModal(false)
+  },[isSuccess])
   return (
     <>
       <Helmet>
         <title>User Profile</title>
         <meta property="og:title" content="User Profile" key="title" />
       </Helmet>
+      {isErrorPost && <Message variant='danger'>{errorPost}</Message>}
       {isError && <Message variant="danger">{error}</Message>}
       {paymentsIsError && <Message variant="danger">{paymentError}</Message>}
+      {isSuccess && (
+        <Message variant='success'>User has been updated successfully</Message>
+      )}
       <Header heading="My Account" showCollapse={true}>
         <div className="container">
           <div className="row">
@@ -100,8 +133,17 @@ const UserProfile = () => {
               <p className="fs-7 fw-bold lh-1 mt-2">{mailingAddress}</p>
               <p className="fs-7 fw-bold lh-1 mt-2">{phone}</p>
               <p className="fs-7 fw-bold lh-1 mt-2">{email}</p>
-              <button type="button" className="btn btn-primary text-center">
-                Edit
+              <button
+                onClick={handleShowModal}
+                type="button"
+                className="btn btn-primary text-center"
+                disabled={isLoadingPost}
+              >
+                {isLoadingPost  ? (
+            <span className='spinner-border spinner-border-sm' />
+          ) : (
+            'Edit'
+          )}
               </button>
             </div>
             <div className="col-md-4 col-sm-12 col-12">
@@ -123,7 +165,7 @@ const UserProfile = () => {
               onChange={handleTermSelect}
             >
               <option value="Spring 2023">Spring 2023</option>
-              <option value="Fall 2023">Fall 2021</option>
+              <option value="Fall 2023">Fall 2023</option>
             </select>
           </div>
         </div>
@@ -158,8 +200,97 @@ const UserProfile = () => {
           </div>
         )}
       </Header>
+      <EditModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        mailingAddress={editMailingAddress}
+        setMailingAddress={setEditMailingAddress}
+        phoneNumber={editPhoneNumber}
+        setPhoneNumber={setEditPhoneNumber}
+        submitHandler={submitHandler}
+        isLoading={isLoadingPost}
+      />
     </>
   );
 };
 
 export default UserProfile;
+
+const EditModal = ({
+  showModal,
+  setShowModal,
+  mailingAddress,
+  setMailingAddress,
+  phoneNumber,
+  setPhoneNumber,
+  submitHandler,
+  isLoading
+}) => {
+  return (
+    <div
+      className="modal"
+      tabIndex="-1"
+      role="dialog"
+      style={{ display: showModal ? "block" : "none" }}
+    >
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Update Values</h5>
+            <button
+              type="button"
+              className="close"
+              onClick={() => setShowModal(false)}
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <div className="mb-3">
+              <label htmlFor="mailingAddress" className="form-label">
+                Mailing Address
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="mailingAddress"
+                value={mailingAddress}
+                onChange={(e) => setMailingAddress(e.target.value)}
+              />
+            </div>
+            <div className="mb-3">
+              <label htmlFor="phoneNumber" className="form-label">
+                Phone Number
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="phoneNumber"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+            <button onClick={submitHandler} type="button" className="btn btn-primary">
+            {isLoading  ? (
+            <span className='spinner-border spinner-border-sm' />
+          ) : (
+            'Update profile'
+          )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};

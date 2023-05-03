@@ -22,34 +22,18 @@ export const getProfile = async (req, res) => {
 export const postProfile = async (req, res) => {
   try {
     const { _id } = req.user
-    const { name, address, phone, bio, image, password } = req.body
+    const { mailingAddress, phone } = req.body
 
     const object = await schemaName.findOne({ user: _id }).populate('user')
 
     if (!object)
       return res.status(400).json({ error: `${schemaNameString} not found` })
 
-    if (name) await User.findOneAndUpdate({ _id }, { name })
-    if (password) {
-      const regex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-      if (!regex.test(password))
-        return res.status(400).json({
-          error:
-            'Password must be at least 8 characters long and contain at least one lowercase letter, one uppercase letter, one number and one special character',
-        })
+    if (mailingAddress) await User.findOneAndUpdate({ _id }, { mailingAddress })
+   
 
-      await User.findOneAndUpdate(
-        { _id },
-        { password: await object.user.encryptPassword(password) }
-      )
-    }
-
-    object.name = name ? name : object.name
+    object.mailingAddress = mailingAddress ? mailingAddress : object.mailingAddress
     object.phone = phone ? phone : object.phone
-    object.address = address ? address : object.address
-    object.image = image ? image : object.image
-    object.bio = bio ? bio : object.bio
     object.user = _id
     await object.save()
     res.status(200).json({ message: `${schemaNameString} updated` })
