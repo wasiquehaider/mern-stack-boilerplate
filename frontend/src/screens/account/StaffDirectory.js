@@ -20,7 +20,7 @@ const StaffDirectory = () => {
     if (!isLoading && data) {
       const locationSet = new Set(data?.data?.map(({ officeLocation }) => officeLocation));
       const locationsData = Array.from(locationSet);
-      const departmentSet = new Set(data?.data?.map(({ researchArea }) => researchArea));
+      const departmentSet = new Set(data?.data?.map(({ college }) => college));
       const departmentsData = Array.from(departmentSet);
       setLocations(locationsData);
       setLocation(locationsData[0]);
@@ -46,8 +46,14 @@ const StaffDirectory = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    const filtered = faculties?.data?.filter(faculty => faculty.officeLocation === location && faculty.researchArea === department && faculty.facultyName.toLowerCase().includes(name) )
-    console.log(filtered)
+    
+    const filtered = faculties?.data?.filter((faculty) => {
+      return (
+        faculty.officeLocation === location &&
+        faculty.college === department &&
+        faculty.facultyName.includes(name)
+      );
+    });
     setResults(filtered)
   };
 
@@ -121,7 +127,7 @@ const StaffDirectory = () => {
                         type="text"
                         className="form-control select-bottom-border"
                         id="name"
-                        placeholder="Type your full Name"
+                        placeholder="Enter your search word"
                         value={name}
                         onChange={handleName}
                       />

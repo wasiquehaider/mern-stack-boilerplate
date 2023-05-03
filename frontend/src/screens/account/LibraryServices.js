@@ -16,6 +16,7 @@ const LibraryServices = () => {
   const [bookName, setBookName] = useState("");
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [selectedBook, setSelectedBook] = useState(null);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
@@ -31,7 +32,6 @@ const LibraryServices = () => {
     );
     setSelectedOptions(selected);
   };
-  console.log(selectedOptions);
 
   const handleBookNameChange = (event) => {
     setBookName(event.target.value);
@@ -130,14 +130,14 @@ const LibraryServices = () => {
           <div className="row justify-content-md-center">
             <div className="col-md-8 border-skyblue p-3">
               {filteredBooksData?.map((book, i) => (
-                <div key={i} className="bookItem">
+                <div key={i} onClick={()=>setSelectedBook(book._id)} className={`bookItem ${selectedBook === book._id  && "bg-warning bg-gradient"} p-2`}>
                   <p className="text-skyBlue fs-7 fw-bold">{book.bookType}</p>
                   <p className="fs-7 fw-bold s">{book.bookDetails}</p>
                   <p className="fs-7 fw-bold">{book.subject}</p>
                 </div>
               ))}
             </div>
-            <div className="col-md-4 col-sm-6 col-xs-12 border-skyblue p-3">
+            <div className="col-md-4 col-sm-12 col-xs-12 border-skyblue p-3">
               <p className="text-skyBlue fs-7 fw-bold pb-4">
                 Rent Selected Item
               </p>

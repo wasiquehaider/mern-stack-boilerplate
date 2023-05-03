@@ -116,7 +116,7 @@ const Home = () => {
                     key={item.id}
                     onClick={() => navigate(item.route)}
                   >
-                    <div className="card text-center">
+                    <div className="card h-100 text-center">
                       <div className="card-body">
                         <div className="icon-container">{item.icon}</div>
                         <h5 className="card-title fs-6">{item.name}</h5>

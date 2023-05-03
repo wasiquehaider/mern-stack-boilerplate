@@ -107,11 +107,11 @@ const MyAcademics = () => {
               </div>
             </div>
             <div className="separator mb-5 "></div>
-            <p className="text-skyBlue fs-7 fw-bold">Account Summary</p>
+            <p className="text-skyBlue fs-7 fw-bold">Courses Enrolled/Completed</p>
            { academicsIsLoading ? (
           <Spinner />
         ) : <div className="container">
-              <div className="col-6">
+              <div className="col-6 col-sm-12 col-xs-12">
                 <table className="table table-striped table-bordered table-hover">
                   <thead className="bg-light">
                     <tr>
