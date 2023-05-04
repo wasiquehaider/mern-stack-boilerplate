@@ -31,6 +31,14 @@ const MyAcademics = () => {
     error: academicsError,
   } = getAcademics;
 
+  useEffect(()=> {
+    if(stdId.length > 0){
+      setTimeout(() => {
+        getAcademics.refetch({ stdId: stdId })  
+      }, 300);
+    }
+  },[stdId])
+
   useEffect(() => {
     if (!isLoading && data) {
       setStdId(data.stdId);
@@ -45,7 +53,6 @@ const MyAcademics = () => {
   }, [isLoading, data]);
   useEffect(() => {
     if (!academicsIsLoading && academicsData) {
-      console.log({academicsData})
       setAcademicsTable(academicsData.data);
     }
   }, [academicsIsLoading, academicsData]);
@@ -107,35 +114,39 @@ const MyAcademics = () => {
               </div>
             </div>
             <div className="separator mb-5 "></div>
-            <p className="text-skyBlue fs-7 fw-bold">Courses Enrolled/Completed</p>
-           { academicsIsLoading ? (
-          <Spinner />
-        ) : <div className="container">
-              <div className="col-6 col-sm-12 col-xs-12">
-                <table className="table table-striped table-bordered table-hover">
-                  <thead className="bg-light">
-                    <tr>
-                      <th>Course Code</th>
-                      <th>Description</th>
-                      <th>Credits</th>
-                      <th>Grade</th>
-                      <th>Term</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {academicsTable?.map((item,i) => (
-                      <tr key={i}>
-                      <td>{item.courseCode}</td>
-                      <td>{item.courseDescription}</td>
-                      <td>{item.credits}</td>
-                      <td>{item.grade}</td>
-                      <td>{item.term}</td>
-                    </tr>
-                    ))}
-                  </tbody>
-                </table>
+            <p className="text-skyBlue fs-7 fw-bold">
+              Courses Enrolled/Completed
+            </p>
+            {academicsIsLoading ? (
+              <Spinner />
+            ) : (
+              <div className="container">
+                <div className="col-6 col-sm-12 col-xs-12">
+                  <table className="table table-striped table-bordered table-hover">
+                    <thead className="bg-light">
+                      <tr>
+                        <th>Course Code</th>
+                        <th>Description</th>
+                        <th>Credits</th>
+                        <th>Grade</th>
+                        <th>Term</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {academicsTable?.map((item, i) => (
+                        <tr key={i}>
+                          <td>{item.courseCode}</td>
+                          <td>{item.courseDescription}</td>
+                          <td>{item.credits}</td>
+                          <td>{item.grade}</td>
+                          <td>{item.term}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>}
+            )}
           </div>
         )}
       </Header>

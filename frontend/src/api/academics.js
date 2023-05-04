@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import dynamicAPI from "./dynamicAPI";
 import { useQuery } from "react-query";
 
@@ -8,12 +7,6 @@ const queryKey = "academics";
 
 export default function useAcademicsHook(props) {
   const { stdId = "" } = props;
-
-  useEffect(() => {
-    if (stdId.length > 0) {
-      getAcademics.refetch();
-    }
-  }, [stdId]);
   const getAcademics = useQuery(
     queryKey,
     async () =>

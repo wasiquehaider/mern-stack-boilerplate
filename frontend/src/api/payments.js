@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import dynamicAPI from "./dynamicAPI";
 import { useQuery } from "react-query";
 
@@ -9,11 +8,6 @@ const queryKey = "payments";
 export default function usePaymentsHook(props) {
   const { stdId = "", term = "" } = props;
 
-  useEffect(()=> {
-    if(stdId.length > 0 && term.length > 0){
-      getPayments.refetch()
-    }
-  },[stdId, term])
   const getPayments = useQuery(
     queryKey,
     async () =>

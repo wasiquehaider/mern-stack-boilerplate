@@ -31,7 +31,7 @@ const UserProfile = () => {
   const { data, isLoading, isError, error } = getProfile;
 
   const { getPayments } = usePaymentsHook({
-    stdId: data?.stdId,
+    stdId: stdId,
     term: selectedTerm,
   });
 
@@ -49,6 +49,15 @@ const UserProfile = () => {
     error: errorPost,
     mutateAsync,
   } = postProfile
+
+  useEffect(()=> {
+    if(stdId.length > 0 && selectedTerm.length > 0 ){
+      setTimeout(() => {
+        getPayments.refetch({ stdId: stdId, term: selectedTerm })  
+      }, 300);
+      
+    }
+  },[stdId, selectedTerm])
 
   const handleShowModal = () => {
     setEditMailingAddress(mailingAddress)
