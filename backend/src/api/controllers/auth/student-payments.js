@@ -39,3 +39,12 @@ export const getStudentPayments = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+
+export const postStudentPayments = async (req, res) => {
+  try {
+    const object = await schemaName.create(req.body)
+    res.status(200).send(object)
+  } catch (error) {
+    res.status(500).json({ error: error.message })
+  }
+}

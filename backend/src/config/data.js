@@ -301,6 +301,13 @@ const clientPermissions = [
     auth: true,
     description: 'User Profiles page',
   },
+  {
+    name: 'Admin Panel',
+    path: '/admin/admin-panel',
+    menu: 'hidden',
+    auth: true,
+    description: 'Admin Panel page',
+  },
 ]
 
 const permissions = [
@@ -368,6 +375,13 @@ const permissions = [
     method: 'POST',
   },
   {
+    description: 'Add Students Payments',
+    route: '/api/auth/addpayment',
+    auth: true,
+    name: 'Add Student Payment',
+    method: 'POST',
+  },
+  {
     description: 'Get All Students Academics',
     route: '/api/auth/academics',
     auth: true,
@@ -386,6 +400,13 @@ const permissions = [
     route: '/api/auth/books',
     auth: true,
     name: 'Books and Journals',
+    method: 'GET',
+  },
+  {
+    description: 'Get All Transcripts',
+    route: '/api/auth/transcripts',
+    auth: true,
+    name: 'Transcripts',
     method: 'GET',
   },
   {

@@ -18,6 +18,7 @@ import { Layout } from './components'
 import StaffDirectory from './screens/account/StaffDirectory'
 import MyAcademics from './screens/account/MyAcademics'
 import LibraryServices from './screens/account/LibraryServices'
+import AdminPanel from './screens/admin/auth/AdminPanel'
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
             <Route path='/account/academics' element={<MyAcademics />} />
             <Route path='/account/staffdirectory' element={<StaffDirectory />} />
             <Route path='/account/library' element={<LibraryServices />} />
+            <Route path='/admin/admin-panel' element={<AdminPanel />} />
             <Route
               path='/admin/auth/client-permissions'
               element={<ClientPermissions />}
