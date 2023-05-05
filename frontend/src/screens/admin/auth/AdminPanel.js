@@ -6,9 +6,6 @@ import useTranscriptsHook from "../../../api/transcripts";
 import useAcademicsHook from "../../../api/academics";
 import usePaymentsHook from "../../../api/payments";
 
-
-
-
 const TermOptions = ["Spring 2023", "Fall 2023"];
 
 const AdminPanel = () => {
@@ -34,20 +31,27 @@ const AdminPanel = () => {
   const handlePaymentSubmit = () => {
     const payload = {
       stdId: currentStudentDetails.stdId,
-      firstName:currentStudentDetails.firstName,
-      lastName:currentStudentDetails.lastName,
+      firstName: currentStudentDetails.firstName,
+      lastName: currentStudentDetails.lastName,
       term: selectedTerm,
       detailCode,
       charge,
       payment,
       balance,
-      programOfStudy:currentStudentDetails.programOfStudy,
+      programOfStudy: currentStudentDetails.programOfStudy,
     };
-    mutateAsyncPost(payload)
+    mutateAsyncPost(payload);
     // handle form submission here
   };
   // ******Payments******
 
+  const handleTranscriptSubmit = () => {
+    const payload = {
+      stdId: currentStudentDetails.stdId,
+      status: transcriptStatus,
+    };
+    mutateAsyncUpdate(payload);
+  };
   const viewsData = [
     {
       optionValue: "",
@@ -231,28 +235,34 @@ const AdminPanel = () => {
     isError: academicsIsError,
     error: academicsError,
   } = getAcademics;
-  const { getTranscripts } = useTranscriptsHook({});
+  const { getTranscripts, updateTranscript } = useTranscriptsHook({});
   const {
     data: data2,
     isLoading: isLoading2,
     isError: isError2,
     error: error2,
   } = getTranscripts;
-  
+
   const { postPayments } = usePaymentsHook({
-    page:1,
-    q:"",
-  })
+    page: 1,
+    q: "",
+  });
   const {
     isLoading: isLoadingPost,
     isError: isErrorPost,
     error: errorPost,
     isSuccess: isSuccessPost,
     mutateAsync: mutateAsyncPost,
-  } = postPayments
+  } = postPayments;
 
-  
-  
+  const {
+    isLoading: isLoadingUpdate,
+    isError: isErrorUpdate,
+    error: errorUpdate,
+    isSuccess: isSuccessUpdate,
+    mutateAsync: mutateAsyncUpdate,
+  } = updateTranscript;
+
   useEffect(() => {
     if (currentStudent.length > 0 && selectedOption === "gpa-and-grades") {
       setTimeout(() => {
@@ -281,9 +291,9 @@ const AdminPanel = () => {
         (item) => item.stdId === currentStudent
       );
       setCurrentTranscript(filtered);
-      setCurrentStudentDetails(filteredStudents)
+      setCurrentStudentDetails(filteredStudents);
     }
-  }, [currentStudent]);
+  }, [currentStudent, transcripts]);
 
   useEffect(() => {
     if (!academicsIsLoading && academicsData) {
@@ -304,18 +314,22 @@ const AdminPanel = () => {
   };
 
   const formCleanHandler = () => {
-    
-    setSelectedTerm("")
-    setDetailCode("")
-    setCharge("")
-    setPayment("")
-    setBalance("")
-    
-  }
+    setSelectedTerm("");
+    setDetailCode("");
+    setCharge("");
+    setPayment("");
+    setBalance("");
+    setSelectedOption("");
+    setTranscriptStatus("")
+  };
 
   useEffect(() => {
-    if (isSuccessPost ) formCleanHandler()
-  }, [isSuccessPost])
+    if (isSuccessPost || isSuccessUpdate) {
+      setTimeout(() => {
+        getTranscripts.refetch();
+      }, 300);
+      formCleanHandler()}
+  }, [isSuccessPost, isSuccessUpdate]);
 
   return (
     <>
@@ -331,11 +345,19 @@ const AdminPanel = () => {
       {isError2 && <Message variant="danger">{error2}</Message>}
       {academicsIsError && <Message variant="danger">{academicsError}</Message>}
       {isErrorPost && <Message variant="danger">{errorPost}</Message>}
+      {isErrorUpdate && <Message variant="danger">{errorUpdate}</Message>}
       {isSuccessPost && (
-        <Message variant='success'>Student Payment has been added successfully.</Message>
+        <Message variant="success">
+          Student Payment has been added successfully.
+        </Message>
+      )}
+      {isSuccessUpdate && (
+        <Message variant="success">
+          Transcript status has been updated successfully.
+        </Message>
       )}
       <Header heading="Admin Panel" showCollapse={true} showHeading={false}>
-        {isLoading || isLoading2 || isLoadingPost ? (
+        {isLoading || isLoading2 || isLoadingPost || isLoadingUpdate ? (
           <Spinner />
         ) : (
           <div className="container">
@@ -380,9 +402,13 @@ const AdminPanel = () => {
                 {selectedOption && (
                   <div className="form-group text-center">
                     <button
-                    onClick={()=>{
-                      selectedView.optionValue === "payment-details" && handlePaymentSubmit()
-                    }}
+                      onClick={() => {
+                        selectedView.optionValue === "payment-details"
+                          ? handlePaymentSubmit()
+                          : selectedView.optionValue === "transcript-status"
+                          ? handleTranscriptSubmit()
+                          : () => {};
+                      }}
                       type="submit"
                       className="btn btn-primary bg-skyBlue mb-5"
                     >

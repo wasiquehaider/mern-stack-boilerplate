@@ -42,7 +42,7 @@ import { getStudentPayments,postStudentPayments } from '../controllers/auth/stud
 import { getStudentAcademics } from '../controllers/auth/student-academics.js'
 import { getFaculties } from '../controllers/auth/faculties.js'
 import { getBooks } from '../controllers/auth/books.js'
-import { getTranscripts } from '../controllers/auth/transcripts.js'
+import { getTranscripts, putTranscriptStatus } from '../controllers/auth/transcripts.js'
 
 const router = express.Router()
 
@@ -67,7 +67,7 @@ router.route('/api/auth/addpayment').post(isAuth, postStudentPayments)
 router.route('/api/auth/academics').post(isAuth, getStudentAcademics)
 router.route('/api/auth/faculties').get(isAuth, getFaculties)
 router.route('/api/auth/books').get(isAuth, getBooks)
-router.route('/api/auth/transcripts').get(isAuth, getTranscripts)
+router.route('/api/auth/transcripts').get(isAuth, getTranscripts).put(isAuth, putTranscriptStatus )
 
 // permissions
 router

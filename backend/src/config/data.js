@@ -410,6 +410,13 @@ const permissions = [
     method: 'GET',
   },
   {
+    description: 'Update Transcript',
+    route: '/api/auth/transcripts',
+    auth: true,
+    name: 'Transcripts',
+    method: 'PUT',
+  },
+  {
     description: 'Get All User Profiles',
     route: '/api/auth/user-profiles',
     auth: true,
