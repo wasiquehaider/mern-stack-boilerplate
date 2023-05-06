@@ -5,12 +5,15 @@ import useUserProfilesHook from "../../../api/profiles";
 import useTranscriptsHook from "../../../api/transcripts";
 import useAcademicsHook from "../../../api/academics";
 import usePaymentsHook from "../../../api/payments";
+import { FaPenAlt} from 'react-icons/fa'
 
 const TermOptions = ["Spring 2023", "Fall 2023"];
 
 const AdminPanel = () => {
+  const [showModal, setShowModal] = useState(false);
   const [academicsTable, setAcademicsTable] = useState([]);
   const [selectedOption, setSelectedOption] = useState("");
+  const [courseCode, setCourseCode] = useState("");
   const [gpa, setGpa] = useState("");
   const [grade, setGrade] = useState("");
   const [transcripts, setTranscripts] = useState([]);
@@ -19,6 +22,11 @@ const AdminPanel = () => {
   const [students, setStudents] = useState([]);
   const [currentStudent, setCurrentStudent] = useState("");
   const [currentStudentDetails, setCurrentStudentDetails] = useState("");
+  const handleShowModal = ({grade,courseCode}) => {
+    setGrade(grade)
+    setCourseCode(courseCode)
+    setShowModal(true)
+  };
   const handleTranscriptStatusChange = (event) => {
     setTranscriptStatus(event.target.value);
   };
@@ -44,7 +52,13 @@ const AdminPanel = () => {
     // handle form submission here
   };
   // ******Payments******
-
+const handleGradeSubmit = () => {
+  const payload = {
+    courseCode:courseCode,
+    grade: grade,
+  };
+  mutateAsyncUpdateAcademic(payload)
+}
   const handleTranscriptSubmit = () => {
     const payload = {
       stdId: currentStudentDetails.stdId,
@@ -71,6 +85,7 @@ const AdminPanel = () => {
                 <th>Credits</th>
                 <th>Grade</th>
                 <th>Term</th>
+                <th>Edit</th>
               </tr>
             </thead>
             <tbody>
@@ -81,6 +96,20 @@ const AdminPanel = () => {
                   <td>{item.credits}</td>
                   <td>{item.grade}</td>
                   <td>{item.term}</td>
+                  <td>
+                  <div className='btn-group'>
+                    <button
+                      className='btn btn-primary btn-sm rounded-pill'
+                      onClick={() => handleShowModal({grade:item.grade, courseCode:item.courseCode})}
+                      data-bs-toggle='modal'
+                      data-bs-target='#userModal'
+                    >
+                      <FaPenAlt />
+                    </button>
+
+                    
+                  </div>
+                </td>
                 </tr>
               ))}
             </tbody>
@@ -96,19 +125,6 @@ const AdminPanel = () => {
               value={gpa}
               placeholder="Enter Gpa"
               onChange={(e) => setGpa(e.target.value)}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="gradeInput" className="form-label">
-              Grade
-            </label>
-            <input
-              type="text"
-              className="form-control"
-              id="gradeInput"
-              value={grade}
-              placeholder="Enter Grade"
-              onChange={(e) => setGrade(e.target.value)}
             />
           </div>
         </div>
@@ -225,7 +241,7 @@ const AdminPanel = () => {
     page: 1,
     q: "",
   });
-  const { getAcademics } = useAcademicsHook({
+  const { getAcademics, updateAcademic } = useAcademicsHook({
     stdId: currentStudent,
   });
   const { data, isLoading, isError, error } = getUserProfiles;
@@ -263,16 +279,26 @@ const AdminPanel = () => {
     mutateAsync: mutateAsyncUpdate,
   } = updateTranscript;
 
+  const {
+    
+    isLoading: isLoadingUpdateAcademic,
+    isError: isErrorUpdateAcademic,
+    error: errorUpdateAcademic,
+    isSuccess: isSuccessUpdateAcademic,
+    mutateAsync: mutateAsyncUpdateAcademic,
+  } = updateAcademic
+
   useEffect(() => {
     if (currentStudent.length > 0 && selectedOption === "gpa-and-grades") {
       setTimeout(() => {
         getAcademics.refetch({ stdId: currentStudent });
       }, 300);
     }
-  }, [currentStudent]);
+  }, [currentStudent, selectedOption]);
   useEffect(() => {
     if (!isLoading && data) {
-      setStudents(data.data);
+      const filtered= data.data.filter(item => item.stdId !== 'admin')
+      setStudents(filtered);
     }
   }, [isLoading, data]);
 
@@ -331,6 +357,15 @@ const AdminPanel = () => {
       formCleanHandler()}
   }, [isSuccessPost, isSuccessUpdate]);
 
+  useEffect(() => {
+    if (isSuccessUpdateAcademic) {
+      setShowModal(false)
+      setTimeout(() => {
+        getAcademics.refetch({ stdId: currentStudent});
+      }, 300);
+      formCleanHandler()}
+  }, [isSuccessUpdateAcademic]);
+
   return (
     <>
       <Helmet>
@@ -346,6 +381,7 @@ const AdminPanel = () => {
       {academicsIsError && <Message variant="danger">{academicsError}</Message>}
       {isErrorPost && <Message variant="danger">{errorPost}</Message>}
       {isErrorUpdate && <Message variant="danger">{errorUpdate}</Message>}
+      {isErrorUpdateAcademic && <Message variant="danger">{errorUpdateAcademic}</Message>}
       {isSuccessPost && (
         <Message variant="success">
           Student Payment has been added successfully.
@@ -356,8 +392,13 @@ const AdminPanel = () => {
           Transcript status has been updated successfully.
         </Message>
       )}
+      {isSuccessUpdateAcademic && (
+        <Message variant="success">
+          Grade has been updated successfully.
+        </Message>
+      )}
       <Header heading="Admin Panel" showCollapse={true} showHeading={false}>
-        {isLoading || isLoading2 || isLoadingPost || isLoadingUpdate ? (
+        {isLoading || isLoading2 || isLoadingPost || isLoadingUpdate || isLoadingUpdateAcademic ? (
           <Spinner />
         ) : (
           <div className="container">
@@ -421,8 +462,85 @@ const AdminPanel = () => {
           </div>
         )}
       </Header>
+      <EditModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        grade={grade}
+        setGrade={setGrade}
+        submitHandler={handleGradeSubmit}
+        isLoading={isLoadingUpdateAcademic}
+      />
     </>
   );
 };
 
 export default AdminPanel;
+
+const EditModal = ({
+  showModal,
+  setShowModal,
+  grade,
+  setGrade,
+  submitHandler,
+  isLoading = false
+}) => {
+ 
+  return (
+    <div
+      className="modal"
+      data-bs-backdrop='static'
+      tabIndex="-1"
+      role="dialog"
+      style={{ display: showModal ? "block" : "none" }}
+    >
+      <div className="modal-dialog" role="document">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h5 className="modal-title">Update Values</h5>
+            <button
+              type="button"
+              className="close"
+              onClick={() => setShowModal(false)}
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div className="modal-body">
+            <div className="mb-3">
+              <label htmlFor="grade" className="form-label">
+                Grade
+              </label>
+              <input
+                type="text"
+                className="form-control"
+                id="grade"
+                value={grade}
+                onChange={(e) => setGrade(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className="modal-footer">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => setShowModal(false)}
+            >
+              Close
+            </button>
+            <button onClick={submitHandler} type="button" className="btn btn-primary">
+            {isLoading  ? (
+            <span className='spinner-border spinner-border-sm' />
+          ) : (
+            'Update Grade'
+          )}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+

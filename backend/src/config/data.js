@@ -30,6 +30,13 @@ const roles = [
 
 const users = [
   {
+    name: "Admin",
+    email: "admin@tgu.com",
+    password: "admin",
+    confirmed: true,
+    blocked: false,
+  },
+  {
     name: "Wasique Haider",
     email: "wasique@info.com",
     password: "123456",
@@ -74,6 +81,27 @@ const users = [
 ];
 
 const studentProfiles = [
+  {
+    "stdId": "admin",
+    "firstName": "Admin",
+    "lastName": "Admin",
+    "gender": "Male",
+    "DOB": "11/17/1994",
+    "email": "admin@tgu.com",
+    "phone": "(123) 456-7890",
+    "mailingAddress": "",
+    "programOfStudy": "",
+    "studentStatus": "",
+    "residence": "",
+    "advisor": "",
+    "permanentAddress": "",
+    "password": "",
+    "currentGPA": null,
+    "academicLevel": "",
+    "concentration": "",
+    "college": "",
+    "graduationDate": ""
+  },
   {
     "stdId": "TGU89170",
     "firstName": "Wasique",
@@ -387,6 +415,13 @@ const permissions = [
     auth: true,
     name: 'Student Academics',
     method: 'POST',
+  },
+  {
+    description: 'Update Students Academics by Id',
+    route: '/api/auth/academics',
+    auth: true,
+    name: 'Update Student Academics',
+    method: 'PUT',
   },
   {
     description: 'Get All Faculties',

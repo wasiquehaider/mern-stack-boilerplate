@@ -40,12 +40,9 @@ export const putTranscriptStatus = async (req, res) => {
   try {
     const { stdId, status } = req.body;
 
-    const object = await schemaName.findOneAndUpdate({ stdId },{status});
+    const object = await schemaName.findOneAndUpdate({ stdId }, { status });
     if (!object)
       return res.status(400).json({ error: `${schemaNameString} not found` });
-
-    // object.status = status;
-    // await object.save();
 
     res.status(200).json({ message: `${schemaNameString} updated` });
   } catch (error) {

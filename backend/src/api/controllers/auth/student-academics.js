@@ -1,6 +1,7 @@
 import Academics from '../../models/Academics.js'
 
 const schemaName = Academics
+const schemaNameString = "Academics";
 
 export const getStudentAcademics = async (req, res) => {
   try {
@@ -38,3 +39,17 @@ export const getStudentAcademics = async (req, res) => {
     res.status(500).json({ error: error.message })
   }
 }
+
+export const putStudentAcademic = async (req, res) => {
+  try {
+    const { courseCode, grade } = req.body;
+
+    const object = await schemaName.findOneAndUpdate({ courseCode }, { grade });
+    if (!object)
+      return res.status(400).json({ error: `${schemaNameString} not found` });
+
+    res.status(200).json({ message: `${schemaNameString} updated` });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
