@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BsFillPersonFill,
   BsFileText,
@@ -11,6 +11,7 @@ import { FaChevronDown, FaChevronRight, FaSchool } from "react-icons/fa";
 import "./styles.css";
 import { useNavigate } from "react-router-dom";
 import {Header} from "../../../components";
+import useAuth from "../../../hooks/useAuth";
 
 const options = [
   {
@@ -76,7 +77,8 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
   const navigate = useNavigate();
-
+  const { auth } = useAuth()
+  const userName = auth?.userInfo?.email
   // toggle collapse state
   const handleOptions = () => {
     setOpen(!open);
@@ -85,6 +87,22 @@ const Home = () => {
   const handleNews = () => {
     setIsCollapsed(!isCollapsed);
   };
+
+  useEffect(() => {
+    function handleFocus(isFocused) {
+      // Do something when the window gains focus
+      if(isFocused && userName === "admin@tgu.com"){
+        navigate('/admin/admin-panel')
+      }
+      
+    }
+
+    window.addEventListener('focus', handleFocus(true));
+
+    return () => {
+      window.removeEventListener('focus', handleFocus(false));
+    };
+  }, []);
 
   return (
     <>

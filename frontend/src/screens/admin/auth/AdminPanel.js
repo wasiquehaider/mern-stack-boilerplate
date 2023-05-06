@@ -397,7 +397,7 @@ const handleGradeSubmit = () => {
           Grade has been updated successfully.
         </Message>
       )}
-      <Header heading="Admin Panel" showCollapse={true} showHeading={false}>
+      <Header heading="Admin Panel" showCollapse={true}>
         {isLoading || isLoading2 || isLoadingPost || isLoadingUpdate || isLoadingUpdateAcademic ? (
           <Spinner />
         ) : (
